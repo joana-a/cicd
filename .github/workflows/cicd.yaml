@@ -1,15 +1,12 @@
-name: Flask CI/CD Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,32 +20,28 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r flask_app/requirements.txt
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Install Heroku CLI
+      - name: Run tests
         run: |
-          curl https://cli-assets.heroku.com/install.sh | sh
+          # Run your tests here
+          pytest
 
-      - name: Authenticate with Heroku
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: |
-          echo "$HEROKU_API_KEY" | heroku auth:token
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
 
-      - name: Docker Login to Heroku Container Registry
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: |
-          echo "$HEROKU_API_KEY" | docker login --username=_ --password-stdin registry.heroku.com
+    steps:
+      - name: Deploy to Digital Ocean
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.DIGITAL_OCEAN_IP }}
+          username: root
+          key: ${{ secrets.DIGITAL_OCEAN_SSH_KEY }}
+          script: |
+            cd /path/to/your/app
+            docker-compose down
+            docker-compose up -d --build
 
-      - name: Build and Push Docker Container to Heroku
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: |
-          heroku container:push web -a team6-project-cicd
-
-      - name: Release the Container on Heroku
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: |
-          heroku container:release web -a team6-project-cicd
+#
