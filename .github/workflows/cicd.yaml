@@ -35,14 +35,7 @@ jobs:
         run: |
           echo "$HEROKU_API_KEY" | heroku auth:token
 
-      - name: Create Procfile for Gunicorn
+      - name: Deploy to Heroku using GitHub Integration
         run: |
-          echo "web: gunicorn flask_app.app:app" > Procfile
-
-      - name: Deploy to Heroku
-        run: |
-          git init
-          git add .
-          git commit -m "Deploying to Heroku"
           heroku git:remote -a team6-project-cicd
-          git push -f heroku main
+          git push heroku main:refs/heads/main
