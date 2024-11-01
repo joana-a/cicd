@@ -3,24 +3,25 @@ name: Deploy Static Site to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - main # This is the source branch
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
 
-      - name: Clean up unnecessary files
-        run: |
-          rm -rf .git
-          rm -rf flask_app/env
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: ./
-          enable_jekyll: false
+          publish_branch: gh-pages # The branch to deploy to
+          publish_dir: ./ # Adjust if your `index.html` is in a subdirectory
+          enable_jekyll: false # Disable Jekyll for a pure static site
+          exclude_assets: |
+            .github/
+            flask_app/env
+            **/.*                   # Ignore hidden files
+            README.md
