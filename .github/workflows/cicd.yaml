@@ -35,7 +35,7 @@ jobs:
         run: |
           echo "$HEROKU_API_KEY" | heroku auth:token
 
-      - name: Deploy to Heroku using GitHub Integration
+      - name: Deploy to Heroku
         run: |
           heroku git:remote -a team6-project-cicd
-          git push heroku main:refs/heads/main
+          git push heroku main:main
