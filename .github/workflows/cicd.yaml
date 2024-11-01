@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r flask_app/requirements.txt  # Correct path to requirements
 
       - name: Run tests
         run: |
@@ -40,8 +40,11 @@ jobs:
           username: root
           key: ${{ secrets.DIGITAL_OCEAN_SSH_KEY }}
           script: |
-            cd /path/to/your/app
+            cd /path/to/your/app  # Change this to the correct path on your server
             docker-compose down
             docker-compose up -d --build
 
-#
+script: |
+  cd /var/www/html/cicd
+  docker-compose down
+  docker-compose up -d --build
