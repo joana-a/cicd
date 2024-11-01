@@ -35,7 +35,14 @@ jobs:
         run: |
           echo "$HEROKU_API_KEY" | heroku auth:token
 
-      - name: Deploy to Heroku
+      - name: Build and Push Docker Container to Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
-          heroku git:remote -a team6-project-cicd
-          git push heroku main:main
+          heroku container:push web -a team6-project-cicd
+
+      - name: Release the Container on Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          heroku container:release web -a team6-project-cicd
