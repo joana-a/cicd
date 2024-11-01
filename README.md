@@ -1,6 +1,7 @@
 # cicd
+
 Group 6
-Eric Afari Dwamena
+Lois Mills
 Joana Aba Mensah
 Nyameye Akumia
-Lois Mills
+Eric Afari Dwamena
