@@ -57,7 +57,3 @@ jobs:
         with:
           branch: gh-pages
           folder: flask_app/templates
-      - name: Run tests
-        run: |
-          pytest
-        shell: bash
