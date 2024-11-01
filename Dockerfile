@@ -7,6 +7,9 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 COPY flask_app /app
 
+ENV FLASK_APP=app.py
+ENV FLASK_RUN_HOST=0.0.0.0
+
 EXPOSE 5000
 
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
+CMD ["flask", "run"]
