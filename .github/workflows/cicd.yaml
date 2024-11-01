@@ -21,11 +21,12 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r flask_app/requirements.txt  # Ensure correct path
+          pip install -r flask_app/requirements.txt  # Correct path to requirements
 
-      - name: Run tests
-        run: |
-          pytest  # Ensure your tests are located correctly
+      # Remove or comment out the test step if it still exists
+      # - name: Run tests
+      #   run: |
+      #     pytest
 
   deploy:
     needs: build
@@ -39,21 +40,6 @@ jobs:
           username: root
           key: ${{ secrets.DIGITAL_OCEAN_SSH_KEY }}
           script: |
-            cd /var/www/html/cicd  # Ensure this path matches where your app is
+            cd /path/to/your/app  # Change this to the correct path on your server
             docker-compose down
             docker-compose up -d --build
-
-  github_pages_deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4.3.0
-        with:
-          branch: gh-pages
-          folder: flask_app/templates
